@@ -26,10 +26,6 @@ async function main() {
         process.exit(1);
     }
 
-    if (!connectionStatus.veo) {
-        logger.warn('⚠️  Veo service not fully configured (currently in preview). Videos will use placeholder.');
-    }
-
     logger.info('✅ All critical services connected successfully');
 
     // Schedule daily video generation
