@@ -5,7 +5,6 @@ import { logger } from '../utils/logger';
 
 export class TikTokAPIService {
     private client: AxiosInstance;
-    private accessToken: string;
     private clientKey: string;
     private clientSecret: string;
 
