@@ -4,7 +4,6 @@ import express from 'express';
 import axios from 'axios';
 import { VideoOrchestrator } from './services/orchestrator';
 import { logger } from './utils/logger';
-import { TokenStorage } from './utils/token-storage';
 
 // Load environment variables
 dotenv.config();
@@ -92,8 +91,7 @@ app.get('/auth/tiktok/callback', async (req, res) => {
 
 /**
  * OAuth initiation endpoint - redirects to TikTok for authorization
- */
-app.get('/auth/tiktok', (req, res) => {
+ */app.get('/auth/tiktok', (req, res) => {
   const clientKey = process.env.TIKTOK_CLIENT_KEY;
   const redirectUri = encodeURIComponent(process.env.TIKTOK_REDIRECT_URI || 'https://aisocialgrowth.com/auth/tiktok/callback');
   const scope = 'user.info.basic,video.publish';
