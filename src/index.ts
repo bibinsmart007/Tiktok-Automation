@@ -18,12 +18,24 @@ async function main() {
 
     // Test connections on startup
     logger.info('Testing service connections...');
-    const connectionStatus = await orchestrator.testAllConnections();
-
-    if (!connectionStatus.tts || !connectionStatus.tiktok) {
-        logger.error('❌ Critical services not connected. Please check your configuration.');
+    let connectionStatus = { tts: false, tiktok: false };
+    try {
+        connectionStatus = await orchestrator.testAllConnections();
+    } catch (error) {
+        logger.error('Error testing connections:', error);
+        logger.warn('Continuing with limited functionality...');
+    }
+    // Check TTS connection (critical)
+    if (!connectionStatus.tts) {
+        logger.error('❌ TTS service not connected. Please check your Google Cloud configuration.');
         logger.error('Connection Status:', connectionStatus);
         process.exit(1);
+    }
+
+    // Check TikTok connection (warn but don't exit)
+    if (!connectionStatus.tiktok) {
+        logger.warn('⚠️ TikTok not connected. Videos will be generated but not posted.');
+        logger.warn('Please configure valid TikTok OAuth credentials to enable posting.');
     }
 
     logger.info('✅ All critical services connected successfully');
