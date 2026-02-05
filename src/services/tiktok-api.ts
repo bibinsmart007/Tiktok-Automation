@@ -12,12 +12,10 @@ export class TikTokAPIService {
     constructor() {
         this.clientKey = process.env.TIKTOK_CLIENT_KEY || '';
         this.clientSecret = process.env.TIKTOK_CLIENT_SECRET || '';
-        this.accessToken = process.env.TIKTOK_ACCESS_TOKEN || '';
-
-        this.client = axios.create({
+    // Dynamic access token that reads from environment each time
             baseURL: 'https://open.tiktokapis.com/v2',
             headers: {
-                'Authorization': `Bearer ${this.accessToken}`,
+                        'Authorization': `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`,
                 'Content-Type': 'application/json'
             }
         });
