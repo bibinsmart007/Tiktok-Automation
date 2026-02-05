@@ -59,3 +59,7 @@ export interface GenerationResult {
     content: VideoContent;
     generated_at: string;
 }
+
+
+// Type alias for backward compatibility
+export type TextSegment = OnScreenTextSegment;
