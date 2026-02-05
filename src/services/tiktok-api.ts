@@ -13,6 +13,7 @@ export class TikTokAPIService {
         this.clientKey = process.env.TIKTOK_CLIENT_KEY || '';
         this.clientSecret = process.env.TIKTOK_CLIENT_SECRET || '';
     // Dynamic access token that reads from environment each time
+            this.client = axios.create({
             baseURL: 'https://open.tiktokapis.com/v2',
             headers: {
                         'Authorization': `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`,
