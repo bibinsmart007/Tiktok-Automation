@@ -59,14 +59,7 @@ app.get('/auth/tiktok/callback', async (req, res) => {
     
     logger.info('Successfully obtained TikTok access token!');
     logger.info('Access Token:', accessToken.substring(0, 20) + '...');
-    logger.info('Refresh Token:', refreshTo
-                    
-    // Save tokens to persistent storage
-    TokenStorage.saveTokens({
-      accessToken: tokenData.access_token,
-      refreshToken: tokenData.refresh_token,
-      expiresIn: tokenData.expires_in
-    });ken ? refreshToken.substring(0, 20) + '...' : 'none');
+    logger.info('Refresh Token:', refreshToken ? refreshToken.substring(0, 20) + '...' : 'none');
     logger.info('Expires in:', tokenData.expires_in, 'seconds');
     
     // Update the orchestrator with the new token
@@ -91,7 +84,8 @@ app.get('/auth/tiktok/callback', async (req, res) => {
 
 /**
  * OAuth initiation endpoint - redirects to TikTok for authorization
- */app.get('/auth/tiktok', (req, res) => {
+ */
+app.get('/auth/tiktok', (req, res) => {
   const clientKey = process.env.TIKTOK_CLIENT_KEY;
   const redirectUri = encodeURIComponent(process.env.TIKTOK_REDIRECT_URI || 'https://aisocialgrowth.com/auth/tiktok/callback');
   const scope = 'user.info.basic,video.publish';
