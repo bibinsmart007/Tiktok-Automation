@@ -1,4 +1,4 @@
-import textToSpeech from '@google-cloud/text-to-speech';
+import * as textToSpeech from '@google-cloud/text-to-speech';
 import fs from 'fs';
 import path from 'path';
 import { TTSVoiceParams } from '../types';
