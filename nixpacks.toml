@@ -2,5 +2,4 @@
 # This file adds FFmpeg as a system package for video processing
 
 [phases.setup]
-nixPkgs = ["ffmpeg-full"]
 aptPkgs = ["ffmpeg"]
