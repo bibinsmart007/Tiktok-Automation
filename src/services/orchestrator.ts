@@ -8,6 +8,7 @@ import { getTopicForDay } from '../data/topics';
 import { GenerationResult } from '../types';
 import { logger } from '../utils/logger';
 import path from 'path';
+import { execSync } from 'child_process';
 
 export class VideoOrchestrator {
   private ttsService: GoogleTTSService;
@@ -221,12 +222,19 @@ export class VideoOrchestrator {
    */
   private async createSilentAudio(): Promise<string> {
     const silentPath = path.join(this.outputDir, 'silent.mp3');
-    // This would normally use FFmpeg to create silent audio
-    // For now, return path - the video composer will handle missing BGM
+    // Create silent audio file using FFmpeg if it doesn't exist
+    try {
+      const fs = require('fs');
+      if (!fs.existsSync(silentPath)) {
+        logger.info('Creating silent audio file with FFmpeg');
+        execSync(`ffmpeg -f lavfi -i anullsrc=r=44100:cl=stereo -t 60 -q:a 9 -acodec libmp3lame "${silentPath}" -y`, { stdio: 'pipe' });
+      }
+    } catch (error) {
+      logger.error('Failed to create silent audio', { error });
+    }
     logger.warn('Using silent audio fallback');
-    return silentPath;
+    return silentPath;  
   }
-
   /**
    * Test all service connections
    */
