@@ -186,12 +186,10 @@ export class TikTokAPIService {
             );
 
             const newAccessToken = response.data.data.access_token;
-            this.accessToken = newAccessToken;
-
+    // Store in environment variable for dynamic reading
+                process.env.TIKTOK_ACCESS_TOKEN = newAccessToken;
             // Update client headers
-            this.client.defaults.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-            logger.info('TikTok access token refreshed successfully');
+    this.client.defaults.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;            logger.info('TikTok access token refreshed successfully');
             return newAccessToken;
         } catch (error) {
             logger.error('Failed to refresh TikTok access token', { error });
