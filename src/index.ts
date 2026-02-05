@@ -108,6 +108,46 @@ app.get('/health', (req, res) => {
 });
 
 /**
+ * Test video generation endpoint - triggers immediate video generation
+ */
+app.get('/test/generate', async (req, res) => {
+  try {
+    logger.info('🎬 Test video generation triggered manually');
+    
+    if (!accessToken) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'No access token available. Please complete OAuth authorization first.',
+        authUrl: '/auth/tiktok'
+      });
+    }
+    
+    const result = await orchestrator.generateAndPostDailyVideo();
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Video generated and posted successfully!',
+        data: result
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: result.error,
+        data: result
+      });
+    }
+  } catch (error: any) {
+    logger.error('Test generation error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to generate test video',
+      details: error.message 
+    });
+  }
+});
+
+/**
  * Main entry point for the TikTok Video Automation System
  */
 async function main() {
