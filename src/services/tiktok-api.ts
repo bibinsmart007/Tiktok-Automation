@@ -11,19 +11,21 @@ export class TikTokAPIService {
     constructor() {
         this.clientKey = process.env.TIKTOK_CLIENT_KEY || '';
         this.clientSecret = process.env.TIKTOK_CLIENT_SECRET || '';
-    // Dynamic access token that reads from environment each time
-            this.client = axios.create({
+
+        // Dynamic access token that reads from environment each time
+        this.client = axios.create({
             baseURL: 'https://open.tiktokapis.com/v2',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
 
-            // Add request interceptor to dynamically set Authorization header
-    this.client.interceptors.request.use((config) => {
-      config.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;
-      return config;
-    });
+        // Add request interceptor to dynamically set Authorization header
+        this.client.interceptors.request.use((config) => {
+            config.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;
+            return config;
+        });
+    }
 
     /**
      * Upload and post video to TikTok
@@ -50,7 +52,6 @@ export class TikTokAPIService {
 
             logger.info('Video posted successfully to TikTok', { postId });
             return postId;
-
         } catch (error) {
             logger.error('Failed to post video to TikTok', { error });
             throw error;
@@ -144,7 +145,6 @@ export class TikTokAPIService {
                     fields: 'id,create_time,cover_image_url,share_url,video_description,duration,height,width,title,embed_html,embed_link,like_count,comment_count,share_count,view_count'
                 }
             });
-
             return response.data.data;
         } catch (error) {
             logger.error('Failed to fetch video analytics', { error });
@@ -190,10 +190,14 @@ export class TikTokAPIService {
             );
 
             const newAccessToken = response.data.data.access_token;
-    // Store in environment variable for dynamic reading
-                process.env.TIKTOK_ACCESS_TOKEN = newAccessToken;
+
+            // Store in environment variable for dynamic reading
+            process.env.TIKTOK_ACCESS_TOKEN = newAccessToken;
+
             // Update client headers
-    this.client.defaults.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;            logger.info('TikTok access token refreshed successfully');
+            this.client.defaults.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;
+            
+            logger.info('TikTok access token refreshed successfully');
             return newAccessToken;
         } catch (error) {
             logger.error('Failed to refresh TikTok access token', { error });
