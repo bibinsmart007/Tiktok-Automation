@@ -15,11 +15,15 @@ export class TikTokAPIService {
             this.client = axios.create({
             baseURL: 'https://open.tiktokapis.com/v2',
             headers: {
-                        'Authorization': `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`,
                 'Content-Type': 'application/json'
             }
         });
-    }
+
+            // Add request interceptor to dynamically set Authorization header
+    this.client.interceptors.request.use((config) => {
+      config.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;
+      return config;
+    });
 
     /**
      * Upload and post video to TikTok
