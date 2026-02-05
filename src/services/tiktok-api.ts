@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import FormData from 'form-data';
 import fs from 'fs';
 import { logger } from '../utils/logger';
+import { TokenStorage } from '../utils/token-storage';
 
 export class TikTokAPIService {
     private client: AxiosInstance;
@@ -21,8 +22,12 @@ export class TikTokAPIService {
         });
 
         // Add request interceptor to dynamically set Authorization header
-        this.client.interceptors.request.use((config) => {
-            config.headers['Authorization'] = `Bearer ${process.env.TIKTOK_ACCESS_TOKEN}`;
+        this.client.interceptors.request.use(async (config) => {
+                  const tokenStorage = new TokenStorage();
+                  const tokens = await tokenStorage.getTokens();
+                  if (tokens && tokens.access_token) {
+                              config.headers['Authorization'] = `Bearer ${tokens.access_token}`;
+                            }
             return config;
         });
     }
