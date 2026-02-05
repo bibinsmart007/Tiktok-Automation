@@ -25,13 +25,11 @@ async function main() {
         logger.error('Error testing connections:', error);
         logger.warn('Continuing with limited functionality...');
     }
-    // Check TTS connection (critical)
+    // Check TTS connection (warn but continue - allows app to start)
     if (!connectionStatus.tts) {
-        logger.error('❌ TTS service not connected. Please check your Google Cloud configuration.');
-        logger.error('Connection Status:', connectionStatus);
-        process.exit(1);
+        logger.warn('⚠️ TTS service not connected. Videos cannot be generated until Google Cloud is configured.');
+        logger.warn('Please add GOOGLE_APPLICATION_CREDENTIALS_JSON to your environment variables.');
     }
-
     // Check TikTok connection (warn but don't exit)
     if (!connectionStatus.tiktok) {
         logger.warn('⚠️ TikTok not connected. Videos will be generated but not posted.');
